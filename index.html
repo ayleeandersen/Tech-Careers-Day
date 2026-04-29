@@ -802,6 +802,17 @@
             btn.textContent = '✓ Key Set';
         }
 
+        function loadKeyFromUrl() {
+            const params = new URLSearchParams(window.location.search);
+            const urlKey = params.get('key');
+
+            if (urlKey) {
+                apiKey = urlKey;
+                const section = document.getElementById('apiKeySection');
+                section.innerHTML = '<div style="color: #333; font-weight: 500;">✓ API key loaded from link</div>';
+            }
+        }
+
         async function generateAppIdea() {
             const idea = document.getElementById('ideaTextarea').value.trim();
 
@@ -903,6 +914,7 @@ Keep the total response under 200 words. Be enthusiastic but not over-the-top. N
 
         // Initialize on load
         window.addEventListener('load', () => {
+            loadKeyFromUrl();
             initializeQuiz();
             initializeGenerator();
         });
