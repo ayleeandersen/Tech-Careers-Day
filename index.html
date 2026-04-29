@@ -915,7 +915,7 @@ Keep the total response under 200 words. Be enthusiastic but not over-the-top. N
         }
 
         // Initialize on load
-        window.addEventListener('load', () => {
+        document.addEventListener('DOMContentLoaded', () => {
             loadKeyFromUrl();
             initializeQuiz();
             initializeGenerator();
