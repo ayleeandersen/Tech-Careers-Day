@@ -557,7 +557,7 @@
         <div id="generator" class="tab-content generator-bg">
             <div class="card generator-container">
                 <div class="api-key-section">
-                    <input type="password" id="apiKeyInput" class="api-key-input" placeholder="Enter your Anthropic API key (kept in memory for this session)">
+                    <input type="password" id="apiKeyInput" class="api-key-input" placeholder="Enter your OpenAI API key (kept in memory for this session)">
                     <button type="button" class="api-key-button" onclick="setApiKey()">Set Key</button>
                 </div>
                 <div id="generatorSection">
@@ -809,7 +809,7 @@
             if (urlKey) {
                 apiKey = urlKey;
                 const section = document.getElementById('apiKeySection');
-                section.innerHTML = '<div style="color: #333; font-weight: 500;">✓ API key loaded from link</div>';
+                section.style.display = 'none';
             }
         }
 
