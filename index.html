@@ -556,7 +556,7 @@
         <div id="generator" class="tab-content generator-bg">
             <div class="card generator-container">
                 <div id="apiKeySection" class="api-key-section">
-                    <input type="password" id="apiKeyInput" class="api-key-input" placeholder="Enter your OpenAI API key (kept in memory for this session)">
+                    <input type="password" id="apiKeyInput" class="api-key-input" placeholder="Enter your Google Gemini API key (kept in memory for this session)">
                     <button type="button" class="api-key-button" onclick="setApiKey()">Set Key</button>
                 </div>
                 <div id="generatorSection">
@@ -830,19 +830,15 @@
             clearError();
 
             try {
-                const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + apiKey, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${apiKey}`
                     },
                     body: JSON.stringify({
-                        model: 'gpt-4-turbo',
-                        max_tokens: 1000,
-                        messages: [
-                            {
-                                role: 'system',
-                                content: `You are a fun, encouraging tech mentor talking to middle school students (ages 11-14) who are learning about software development careers. When a student describes an app idea, respond with enthusiasm and structure your response exactly like this (use these exact labels on their own lines):
+                        systemInstruction: {
+                            parts: [{
+                                text: `You are a fun, encouraging tech mentor talking to middle school students (ages 11-14) who are learning about software development careers. When a student describes an app idea, respond with enthusiasm and structure your response exactly like this (use these exact labels on their own lines):
 
 APP NAME: (a creative, catchy name for their app)
 WHAT IT DOES: (1-2 sentences, kid-friendly)
@@ -851,12 +847,17 @@ WHO BUILDS IT: (name 1-2 real software developer job titles that would work on t
 FUN FACT: (one surprising, encouraging fact about apps or software development)
 
 Keep the total response under 200 words. Be enthusiastic but not over-the-top. Never say "Great idea!" as your opener.`
-                            },
-                            {
-                                role: 'user',
-                                content: idea
-                            }
-                        ]
+                            }]
+                        },
+                        contents: [{
+                            role: 'user',
+                            parts: [{
+                                text: idea
+                            }]
+                        }],
+                        generationConfig: {
+                            maxOutputTokens: 1000,
+                        }
                     })
                 });
 
@@ -866,7 +867,7 @@ Keep the total response under 200 words. Be enthusiastic but not over-the-top. N
                 }
 
                 const data = await response.json();
-                const result = data.choices[0].message.content;
+                const result = data.candidates[0].content.parts[0].text;
 
                 resultContainer.innerHTML = `<div class="result-box">${escapeHtml(result)}</div>`;
             } catch (error) {
