@@ -285,8 +285,7 @@
 
         /* App Generator Styles */
         .generator-container {
-            max-width: 800px;
-            margin: 0 auto;
+            max-width: none;
         }
 
         .generator-bg {
@@ -556,7 +555,7 @@
         <!-- Generator Tab -->
         <div id="generator" class="tab-content generator-bg">
             <div class="card generator-container">
-                <div class="api-key-section">
+                <div id="apiKeySection" class="api-key-section">
                     <input type="password" id="apiKeyInput" class="api-key-input" placeholder="Enter your OpenAI API key (kept in memory for this session)">
                     <button type="button" class="api-key-button" onclick="setApiKey()">Set Key</button>
                 </div>
