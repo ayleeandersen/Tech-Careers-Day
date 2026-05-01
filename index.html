@@ -914,6 +914,9 @@ Keep the total response under 200 words. Be enthusiastic but not over-the-top. N
                 const data = await response.json();
                 const result = data.candidates[0].content.parts[0].text;
 
+                // Log raw response for debugging
+                console.log('Raw API response:', result);
+
                 resultContainer.innerHTML = `<div class="result-box">${formatAppResult(result)}</div>`;
             } catch (error) {
                 showError('Error: ' + error.message);
@@ -1020,6 +1023,38 @@ Keep the total response under 200 words. Be enthusiastic but not over-the-top. N
                 html += `<div class="result-section" style="background: linear-gradient(135deg, rgba(29, 158, 117, 0.1) 0%, rgba(29, 158, 117, 0.05) 100%); padding: 20px; border-radius: 10px; border-left: 4px solid #1D9E75;">
                     <div class="result-label">Fun Fact</div>
                     <div class="result-content">${escapeHtml(sections['FUN FACT'])}</div>
+                </div>`;
+            }
+
+            // Check if there's any unprocessed text at the end
+            const fullText = text;
+            let unprocessed = '';
+            let lastFoundIndex = -1;
+
+            for (const label of Object.keys(sections)) {
+                const index = fullText.lastIndexOf(label + ':');
+                if (index > lastFoundIndex) {
+                    lastFoundIndex = index;
+                }
+            }
+
+            if (lastFoundIndex !== -1) {
+                const lastLabelStart = fullText.indexOf(':', lastFoundIndex) + 1;
+                const afterLastLabel = fullText.substring(lastLabelStart);
+                // Find the next section or end of string
+                let nextSectionStart = afterLastLabel.length;
+                for (const label of Object.keys(sections)) {
+                    const idx = afterLastLabel.indexOf(label + ':');
+                    if (idx > 0 && idx < nextSectionStart) {
+                        nextSectionStart = idx;
+                    }
+                }
+                unprocessed = afterLastLabel.substring(nextSectionStart).trim();
+            }
+
+            if (unprocessed && unprocessed.length > 0) {
+                html += `<div class="result-section">
+                    <div class="result-content">${escapeHtml(unprocessed)}</div>
                 </div>`;
             }
 
